@@ -61,3 +61,11 @@ np.var(norm)
 np.percentile(norm, 50)
 np.percentile(norm, 10)
 np.percentile(norm, 90)
+np.percentile(norm, 99.9)
+np.percentile(norm, 0.01)
+np.percentile(norm, [1,5,25,50,75,95,99])
+
+#libreria scipy.stats
+from scipy.stats import kurtosis, skew
+kurtosis(norm)
+skew(norm)
