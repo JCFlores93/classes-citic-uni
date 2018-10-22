@@ -24,4 +24,15 @@ np.std(ventas)
 ventas.describe()
 
 #Analizando ventas
-np.percentile(ventas[[ 'ventas ' ]])
+np.percentile(ventas[[ ' ventas ' ]], 50)
+
+np.percentile(ventas[[ ' ventas ' ]], range(101))
+np.percentile(ventas[[ ' ventas ' ]], 34)
+np.percentile(ventas[[ ' ventas ' ]], 88)
+
+#Importando libreria
+from scipy.stats import kurtosis, skew
+kurtosis(ventas) ## kurtosis
+skew(ventas) ### asimetria
+
+
