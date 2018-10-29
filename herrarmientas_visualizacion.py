@@ -63,3 +63,80 @@ g=sns.FacetGrid(tips, row='time', col='sex')
 g.map(plt.hist, "tip")
 
 
+#Boxplots
+
+#Descargando base 
+iris = sns.load_dataset('iris')
+
+#Análisis univariado
+iris.boxplot()
+iris.hist()
+
+#Analisis bivariado
+iris.boxplot(column='sepal_length', by='species')
+sns.boxplot(x="sex", y="total_bill",hue="time", data=tips)
+
+
+#Scatter 
+#####################
+plt.scatter(data['Population'], 
+            data['GDP per Capita'])
+
+plt.scatter(tips['total_bill'], 
+            tips['tip'])
+
+plt.scatter(tips['total_bill'], 
+            tips['tip'], marker= 'x')
+
+plt.scatter(tips['total_bill'], 
+            tips['tip'], marker= 'x', alpha=0.5,
+            s=100, color='green')
+
+
+#cargando data 
+feliz = pd.read_csv('happy2015.csv')
+feliz.columns
+
+#importando librerias 
+from pandas.tools.plotting import scatter_matrix
+scatter_matrix(feliz)
+
+#subsetting
+feliz.columns
+scatter_matrix(feliz[['Happiness Score', 'Economy (GDP per Capita)']])
+
+sub_feliz = feliz[['Happiness Score', 
+                   'Economy (GDP per Capita)', 
+                   'Trust (Government Corruption)',
+                   'Generosity']]
+scatter_matrix(sub_feliz)
+
+iris.plot(kind="scatter", x="sepal_length", y="sepal_width")
+
+g = sns.FacetGrid(iris, hue='species', size=5)
+g.map(plt.scatter, 'sepal_length', 'sepal_width').add_legend()
+
+
+#Barplot
+###############
+
+feliz.plot.bar()
+
+# Subsetting
+feliz2 = feliz[:10][['Country', 'Happiness Rank', 
+              'Trust (Government Corruption)']]
+
+#Descargando base de datos 
+titanic = sns.load_dataset('titanic')
+
+sns.barplot(x="sex", y="survived", hue="class", data=titanic)
+sns.barplot(x="sex", y="survived", hue="deck", data=titanic)
+
+
+
+
+
+
+
+
+
