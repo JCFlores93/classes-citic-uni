@@ -132,6 +132,12 @@ titanic = sns.load_dataset('titanic')
 sns.barplot(x="sex", y="survived", hue="class", data=titanic)
 sns.barplot(x="sex", y="survived", hue="deck", data=titanic)
 
+#Pie chart
+feliz['Region'].value_counts()
+plt.pie(feliz['Region'].value_counts(), 
+        labels=feliz['Region'].value_counts().index)
+
+
 
 
 
