@@ -137,12 +137,24 @@ feliz['Region'].value_counts()
 plt.pie(feliz['Region'].value_counts(), 
         labels=feliz['Region'].value_counts().index)
 
+#Line Chart
+##############################################################
+plt.plot(feliz['Happiness Score'])
+feliz['Happiness Score'].plot(kind='line', marker='o')
 
+# Funcion de densidad
+##############################################################
+x1 = np.random.normal(0,1,10000)
+plt.hist(x1)
 
+sns.distplot(x1, hist=True, kde=True, color='blue')
+sns.distplot(x1, hist=False, kde=True, color='blue')
+sns.distplot(x1, hist=True, kde=False, color='blue')
 
-
-
-
-
+sns.distplot(x1, 
+             hist=True, 
+             kde=True, 
+             color='blue', 
+             hist_kws={'edgecolor':'black'})
 
 
