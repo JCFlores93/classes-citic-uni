@@ -1,0 +1,7 @@
+presentar:
+analisis univariado(2)
+	- 1 variable categorica
+	- 1 variables continua
+analisis bivariado(1)
+
+to: josewaraujob@gmail.com
