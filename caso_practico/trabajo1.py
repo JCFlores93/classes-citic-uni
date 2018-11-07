@@ -13,7 +13,35 @@ import seaborn as sns
 
 
 data = pd.read_csv('caso.csv')
-data1 = data.drop(['id','empleo','dias_lab'], axis=1)
+
+
+sns.distplot(data['casa_f'],
+             hist=False,
+             rug=True,
+             kde_kws={'shade':True})
+plt.show()
+plt.clf()
+
+
+#Análisis bivaraido - scatter
+sns.regplot(x="linea_sf",
+            y="edad",
+            data=data)
+plt.show()
+plt.clf()
+
+data1 = data.drop(['id','empleo','dias_lab','casa_f'], axis=1)
+
+
+data1.describe()
+
+#Variables categoricas
+# mora
+# casa
+# zona
+# nivel educacional
+
+
 
 plt.hist(data1.mora)
 
