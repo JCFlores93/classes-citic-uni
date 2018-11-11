@@ -32,3 +32,16 @@ x_test_sc = sc.transform(x_test)
 #Viendo objetos aprendidos
 sc.mean_
 sc.var_
+
+#Discriminante lineal
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+
+#Contar categorias de variables objetivo
+dataset.columns
+dataset['Purchased'].value_counts()
+
+#Aplicando LDA
+lda = LDA(n_components=1)
+x_train_lda = lda.fit_transform(x_train_sc, y_train)
+x_test_lda = lda.transform(x_test)
+coeficientes=lda.coef_
