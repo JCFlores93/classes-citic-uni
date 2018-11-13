@@ -9,48 +9,35 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn import datasets
-import seaborn as sns
-
+import seaborn as sns; sns.set()
 
 data = pd.read_csv('caso.csv')
 
+data_zona = data[['zona']]
+data_zona.describe()
+data_zona.apply(pd.value_counts).plot(kind='bar', 
+       subplots=False, 
+       legend=True, 
+       title='Departamento')
 
-sns.distplot(data['casa_f'],
+sns.distplot(data['edad'],
              hist=False,
              rug=True,
              kde_kws={'shade':True})
 plt.show()
 plt.clf()
 
+data_edad = data[['edad']]
+data_edad.mean()
+sns.set(style="whitegrid")
+ax = sns.boxplot(x=data_edad)
 
-#Análisis bivaraido - scatter
-sns.regplot(x="linea_sf",
-            y="edad",
-            data=data)
+g=sns.FacetGrid(data,row='clasif_sbs',col='nivel_educ')
+g.map(plt.hist,"linea_sf")
+
+sns.boxplot(x="linea_sf",y="nivel_educ",data=data)
+
+plt.scatter(x=data['edad'],y=data['linea_sf'])
 plt.show()
-plt.clf()
 
-data1 = data.drop(['id','empleo','dias_lab','casa_f'], axis=1)
-
-
-data1.describe()
-
-#Variables categoricas
-# mora
-# casa
-# zona
-# nivel educacional
-
-
-
-plt.hist(data1.mora)
-
-data1.mora.describe()
-
-#Análisis univariado
-#Categorica
-zona = data1[['zona','mora']]
-zona.zona.plot.bar()
-zona.hist()
-type(zona)
-iris.hist()
+ax = sns.scatterplot(x="linea_sf", y="clasif_sbs", data=data)
