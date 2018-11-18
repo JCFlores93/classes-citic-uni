@@ -7,7 +7,9 @@ Created on Mon Nov 12 20:49:54 2018
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+from sklearn.preprocessing import LabelBinarizer
+import seaborn as sns
+from sklearn.covariance import EllipticEnvelope
 
 data = pd.read_csv('caso.csv')
 data = data.iloc[:,1:]
@@ -28,9 +30,54 @@ print (data.apply(num_missing, axis=0))
 
 tipos = data.columns.to_series().groupby(data.dtypes).groups
 
+print(data['edad'][334])
+
+print(data[data['edad'] < 30]['edad'])
+
 from scipy.stats import mode
 for column in ['antig_tc', 'linea_sf','deuda_sf']:
     data[column] = data[column].fillna(data[column].median())
+
+columna = 'atraso'
+sns.set(style="whitegrid")
+ax = sns.boxplot(x=data[columna])
+norm = data[columna]
+np.percentile(norm,[0.1,50,75,90])
+
+feature_edad = data[columna]
+np.percentile(feature_edad,[25,50,95])
+
+#################################
+#Create a feature
+feature_edad = data['clasif_sbs']
+
+def indicies_of_outliers(x):
+    q1, q3= np.percentile(x, [25,75])
+    iqr = q3 -q1
+    lower_bound = q1 - (iqr * 1.5)
+    upper_bound = q3 + (iqr * 1.5)
+    print('====>',upper_bound)
+    print('====>',lower_bound)
+    return np.where((x > upper_bound) | (x < lower_bound))
+
+outliers_edad = list(indicies_of_outliers(feature_edad))
+    
+#data = data.drop(data.index[outliers_edad])
+########################################
+
+data['edad']=np.where(data.edad<=9.5,9.5,
+   np.where(data.edad>=61.5,61.5,data.edad))
+
+data['atraso']=np.where(data.atraso>=5,5,data.atraso)
+
+data['ingreso']=np.where(data.ingreso>=10150,10150,data.ingreso)
+data['linea_sf']=np.where(data.linea_sf>=20524.52625,20524.52625,data.linea_sf)
+data['deuda_sf']=np.where(data.deuda_sf>=12240.91875,12240.91875,data.deuda_sf)
+
+data['score']=np.where(data.score<=137,137,
+   np.where(data.score>=257,257,data.score))
+
+data['clasif_sbs']=np.where(data.clasif_sbs>=2.5,2.5,data.clasif_sbs)
     
 #Create one-hot encoder
 one_hot = LabelBinarizer()
@@ -53,7 +100,7 @@ train = train.drop(['casa', 'casa_f'], axis=1)
 
 #Tratamos la columna zona
 #One-hot encode feature
-data_zona = one_hot.fit_transform(data['zona'])
+data_zona = one_hot.fit_transform(train['zona'])
 
 #View feature classes
 columns_data_zona = one_hot.classes_.tolist()
@@ -71,16 +118,68 @@ train = train.drop('zona', axis=1)
 train['nivel_educ'].unique()
 #Crear un mapper
 scale_mapper = {
-        "PROFESIONAL": 5,
-        "TECNICO": 4,
+        "PROFESIONAL": 1,
+        "TECNICO": 2,
         "SUPERIOR": 3,
-        "EDUCACION BASICA": 2,
-        "SIN EDUCACION": 1,
+        "EDUCACION BASICA": 4,
+        "SIN EDUCACION": 5,
         }
 train['nivel_educ'] = train['nivel_educ'].replace(scale_mapper)
+
+#Tratamos la columna zona
+#One-hot encode feature
+data_nivel_educ = one_hot.fit_transform(train['nivel_educ'])
+
+#View feature classes
+columns_data_nivel_educ = one_hot.classes_.tolist()
+   
+data_nivel_educ = pd.DataFrame(
+        data=data_nivel_educ,
+        columns=columns_data_nivel_educ
+        )
+
+train = pd.concat([train, data_nivel_educ], axis=1)
+train = train.drop('nivel_educ', axis=1)
+
 len(train.columns)
 train = train.drop('dias_lab', axis=1)
 train = train.drop('empleo', axis=1)
+
+train['edad'].unique()
+
+train_edad = []
+for row in train['edad']:
+    if(row <= 35):
+        train_edad.append("JOVEN")
+    elif (row > 35 and row <=50):
+         train_edad.append("ADULTO-JOVEN")
+    else:
+        train_edad.append("ADULTO-MAYOR")
+train['edad'] = train_edad
+#Crear un mapper
+scale_mapper_edad = {
+        "JOVEN": 1,
+        "ADULTO-JOVEN": 2,
+        "ADULTO-MAYOR": 3
+        }
+train['edad'] = train['edad'].replace(scale_mapper_edad)
+#Tratamos la columna zona
+#One-hot encode feature
+data_edad = one_hot.fit_transform(train['edad'])
+
+#View feature classes
+columns_data_edad = one_hot.classes_.tolist()
+columns_data_edad = ['JOVEN', 'ADULTO-JOVEN', 'ADULTO-MAYOR']
+   
+data_edad = pd.DataFrame(
+        data=data_edad,
+        columns=columns_data_edad
+        )
+
+train = pd.concat([train, data_edad], axis=1)
+train = train.drop('edad', axis=1)
+
+
 #Generando variables x e y
 x=train.drop('mora', axis=1)
 y=train[['mora']]

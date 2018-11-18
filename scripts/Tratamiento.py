@@ -93,6 +93,9 @@ df.fillna(method='bfill',axis=1)
 norm=np.random.normal(5000,125,size=(1000,1))
 np.percentile(norm,[0,1,5,95,99,100])
 
+
+np.percentile(norm,[25,50,75])
+
 ej1=np.where(5>3,1,0)
 
 # Acotando
