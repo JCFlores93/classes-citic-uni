@@ -142,8 +142,8 @@ train = pd.concat([train, data_nivel_educ], axis=1)
 train = train.drop('nivel_educ', axis=1)
 
 len(train.columns)
-train = train.drop('dias_lab', axis=1)
-train = train.drop('empleo', axis=1)
+#train = train.drop('dias_lab', axis=1)
+#train = train.drop('empleo', axis=1)
 
 train['edad'].unique()
 
@@ -178,6 +178,45 @@ data_edad = pd.DataFrame(
 
 train = pd.concat([train, data_edad], axis=1)
 train = train.drop('edad', axis=1)
+
+train2 = train.copy()
+
+
+def converting_cast(s):
+    return s.replace(',', '')
+
+def converting_to_float(x):
+    return int(x)
+
+train['dias_lab'] = train['dias_lab'].apply(converting_cast)
+train['dias_lab'] = train['dias_lab'].apply(converting_to_float)
+
+
+def converting_to_date(x):
+    return x.timestamp()
+
+def converting_string_to_date(x):
+    return x * 1000
+
+#COnvertido a string -> fecha
+train2['empleo'] = pd.to_datetime(train2['empleo'])
+
+train['empleo'] = pd.to_datetime(train['empleo'])
+
+import time
+#a milisegundos
+
+def converting_date_to_miliseconds(x):
+    return int(round(x.timestamp() * 1000))
+
+
+train['empleo'] = train['empleo'].apply(converting_date_to_miliseconds)
+
+train['empleo'] = train['empleo'].apply(converting_string_to_date)
+train['empleo'] = train['empleo'].apply(converting_cast)
+
+
+
 
 
 #Generando variables x e y
