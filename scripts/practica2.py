@@ -92,7 +92,7 @@ data_casa = pd.DataFrame(
         data=data_casa,
         columns=columns_data_casa
         )
-
+data_casa = data_casa.drop('OTRAS', axis=1)
 train = pd.concat([data, data_casa], axis=1)
 
 #Eliminamos casa y casa_f
@@ -109,7 +109,7 @@ data_zona = pd.DataFrame(
         data=data_zona,
         columns=columns_data_zona
         )
-
+data_zona = data_zona.drop('Ucayali', axis=1)
 train = pd.concat([train, data_zona], axis=1)
 train = train.drop('zona', axis=1)
 
@@ -131,13 +131,13 @@ train['nivel_educ'] = train['nivel_educ'].replace(scale_mapper)
 data_nivel_educ = one_hot.fit_transform(train['nivel_educ'])
 
 #View feature classes
-columns_data_nivel_educ = one_hot.classes_.tolist()
-   
+#columns_data_nivel_educ = one_hot.classes_.tolist()
+columns_data_nivel_educ = ["PROFESIONAL","TECNICO","SUPERIOR","EDUCACION BASICA","SIN EDUCACION"]
 data_nivel_educ = pd.DataFrame(
         data=data_nivel_educ,
         columns=columns_data_nivel_educ
         )
-
+data_nivel_educ = data_nivel_educ.drop('SIN EDUCACION', axis=1)
 train = pd.concat([train, data_nivel_educ], axis=1)
 train = train.drop('nivel_educ', axis=1)
 
@@ -175,7 +175,7 @@ data_edad = pd.DataFrame(
         data=data_edad,
         columns=columns_data_edad
         )
-
+data_edad = data_edad.drop('ADULTO-MAYOR', axis=1)
 train = pd.concat([train, data_edad], axis=1)
 train = train.drop('edad', axis=1)
 
@@ -203,9 +203,7 @@ train2['empleo'] = pd.to_datetime(train2['empleo'])
 
 train['empleo'] = pd.to_datetime(train['empleo'])
 
-import time
 #a milisegundos
-
 def converting_date_to_miliseconds(x):
     return int(round(x.timestamp() * 1000))
 
@@ -225,7 +223,7 @@ y=train[['mora']]
 
 #Separando base en train y test
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,random_state=0)
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.3,random_state=0)
 
 #Escalamiento
 from sklearn.preprocessing import StandardScaler
